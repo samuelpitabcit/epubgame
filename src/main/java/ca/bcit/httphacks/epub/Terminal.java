@@ -2,6 +2,14 @@ package ca.bcit.httphacks.epub;
 
 import java.io.IOException;
 
+/**
+ * Terminal wrapper class.
+ *
+ * @author Samuel Pita
+ * @author Rodrigo Sanchez
+ * @author Jaspreet Bath
+ * @version 1.0
+ */
 public class Terminal
 {
     //#region ANSI Function Codes

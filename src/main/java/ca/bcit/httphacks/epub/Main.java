@@ -8,6 +8,7 @@ import com.github.kwhat.jnativehook.NativeHookException;
  *
  * @author Samuel Pita
  * @author Rodrigo Sanchez
+ * @author Jaspreet Bath
  * @version 1.0
  */
 public class Main
