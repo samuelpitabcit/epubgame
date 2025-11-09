@@ -3,6 +3,9 @@ package ca.bcit.httphacks.epub;
 import com.github.kwhat.jnativehook.GlobalScreen;
 import com.github.kwhat.jnativehook.NativeHookException;
 
+import java.util.List;
+
+
 /**
  * Main class.
  *
@@ -102,14 +105,34 @@ public class Main
             throw new IllegalStateException("Program hasn't started yet, or has already ended");
         }
 
-        endEvent();
-    }
+        final Canvas canvas = new Canvas(6);
+        final Game game = new Game(joinedText);
+        final InputManager inputManager = new InputManager(game);
 
-    public void changeScene(final Scene newScene)
-    {
-        if (this.scene == null)
-        {
-            throw new IllegalStateException("Program hasn't started yet");
+
+        GlobalScreen.addNativeKeyListener(inputManager);
+
+        // This should be the game loop (for now)
+        while (GlobalScreen.isNativeHookRegistered()) {
+            Terminal.debugSleep(100);
+            Terminal.clear();
+
+            game.writeToCanvasDebug(canvas);
+            Terminal.write(canvas);
+
+//            canvas.writeLine("Hello world!");
+//            canvas.writeLine("Testing build.");
+//
+//            Terminal.write(canvas.getContent());
+//            Terminal.debugSleep(1000);
+//            Terminal.clear();
+//
+//            canvas.reset();
+//            canvas.writeLine("I'm gonna cum inside of myself.");
+//
+//            Terminal.write(canvas.getContent());
+//            Terminal.debugSleep(1000);
+//            Terminal.clear();
         }
 
         endEvent();
