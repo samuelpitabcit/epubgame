@@ -66,7 +66,7 @@ public class Game
 
     public void writeToCanvasDebug(final Canvas canvas) {
         canvas.reset();
-        // textContent is the file that is handled
+        // Display only the current page content
         canvas.writeLine(this.textContent);
         canvas.writeLine("Input: " + this.input.toString());
         canvas.writeLine("Typed characters: " + this.input.length());
