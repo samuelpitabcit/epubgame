@@ -3,6 +3,9 @@ package ca.bcit.httphacks.epub;
 import com.github.kwhat.jnativehook.GlobalScreen;
 import com.github.kwhat.jnativehook.NativeHookException;
 
+import java.util.List;
+
+
 /**
  * Main class.
  *
@@ -20,8 +23,13 @@ public class Main
      *
      * @param args This is where the .epub file will be supplied.
      */
-    static void main(final String[] args)
+    public static void main (String[] args)
     {
+        // -- FileLoader Stuff HERE --- //
+        FileLoader loader = new FileLoader();
+        List<String> lines = loader.loadText("test.txt");
+        String joinedText = String.join("\n", lines);
+
         // Register the native hook.
         try {
             final java.util.logging.Logger logger =
@@ -40,8 +48,9 @@ public class Main
         }
 
         final Canvas canvas = new Canvas(6);
-        final Game game = new Game("Test content");
+        final Game game = new Game(joinedText);
         final InputManager inputManager = new InputManager(game);
+
 
         GlobalScreen.addNativeKeyListener(inputManager);
 

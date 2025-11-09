@@ -66,7 +66,9 @@ public class Game
 
     public void writeToCanvasDebug(final Canvas canvas) {
         canvas.reset();
-        canvas.writeLine(this.input.toString());
-        canvas.writeLine("this.input length = " + this.input.length());
+        // textContent is the file that is handled
+        canvas.writeLine(this.textContent);
+        canvas.writeLine("Input: " + this.input.toString());
+        canvas.writeLine("Typed characters: " + this.input.length());
     }
 }
