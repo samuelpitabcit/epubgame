@@ -5,6 +5,7 @@ package ca.bcit.httphacks.epub;
  *
  * @author Samuel Pita
  * @author Rodrigo Sanchez
+ * @author Jaspreet Bath
  * @version 1.0
  */
 public class Game
