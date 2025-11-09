@@ -175,7 +175,7 @@ public class Terminal
     /**
      * Writes the contents of a given Canvas object to the Terminal.
      *
-     * @param canvas Canvas object.
+     * @param canvas Source canvas object.
      */
     public static void write(final Canvas canvas)
     {
@@ -195,6 +195,16 @@ public class Terminal
                 System.out.println(contentLine);
             }
         }
+    }
+
+    /**
+     * Clears, then writes the contents of a given Canvas object to the Terminal.
+     *
+     * @param canvas Source canvas object.
+     */
+    public static void cycle(final Canvas canvas) {
+        clear();
+        write(canvas);
     }
 
     /**

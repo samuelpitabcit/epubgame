@@ -16,35 +16,93 @@ import java.util.List;
  */
 public class Main
 {
-    /**
-     * Main function.
-     * <br>
-     * The current code is absolute trash at the moment; will be reworked soon.
-     *
-     * @param args This is where the .epub file will be supplied.
-     */
-    public static void main (String[] args)
+    private static final int PROGRAM_ERROR_EXIT_CODE = 1;
+    private static final int CANVAS_CONTENT_LINES = 8;
+
+    private final Canvas mainCanvas;
+    private Scene scene;
+
+    public Main()
     {
-        // -- FileLoader Stuff HERE --- //
-        FileLoader loader = new FileLoader();
-        List<String> lines = loader.loadText("test.txt");
-        String joinedText = String.join("\n", lines);
+        this.mainCanvas = new Canvas(CANVAS_CONTENT_LINES);
+        this.scene      = null;
+    }
 
-        // Register the native hook.
-        try {
+    private static void initializeInputHook()
+    {
+        try
+        {
+            // Disables logging for the GlobalScreen class.
             final java.util.logging.Logger logger =
-                java.util.logging.Logger.getLogger(GlobalScreen.class.getPackage().getName());
-
+                java.util.logging.Logger.getLogger(
+                    GlobalScreen.class
+                        .getPackage()
+                        .getName());
             logger.setLevel(java.util.logging.Level.OFF);
             logger.setUseParentHandlers(false);
 
+            // Registers the native hook.
             GlobalScreen.registerNativeHook();
         }
-        catch (NativeHookException e)
+        catch (final NativeHookException e)
         {
             System.err.println("Hook registration failed: " + e.getMessage());
-            System.exit(1);
+            System.exit(PROGRAM_ERROR_EXIT_CODE);
+
             throw new RuntimeException(e);
+        }
+    }
+
+    private void initEvent()
+    {
+        // Logic Setup
+        GlobalScreen.addNativeKeyListener(this.scene.getInputManager());
+        this.scene.initLogic();
+
+        // Canvas Setup
+        this.scene.initCanvas(this.mainCanvas);
+        Terminal.cycle(this.mainCanvas);
+    }
+
+    private void endEvent()
+    {
+        // Logic Conclusion
+        this.scene.endLogic();
+        GlobalScreen.removeNativeKeyListener(this.scene.getInputManager());
+
+        // Canvas Conclusion
+        this.scene.endCanvas(this.mainCanvas);
+        Terminal.cycle(this.mainCanvas);
+    }
+
+    public void start(final Scene scene)
+    {
+        if (this.scene != null)
+        {
+            throw new IllegalStateException("Program has started already");
+        }
+
+        this.scene = scene;
+        initEvent();
+    }
+
+    public void update()
+    {
+        if (this.scene == null)
+        {
+            throw new IllegalStateException("Program hasn't started yet");
+        }
+
+        this.scene.updateLogic();
+        this.scene.updateCanvas(this.mainCanvas);
+        Terminal.cycle(this.mainCanvas);
+    }
+
+    public void end()
+    {
+        if (this.scene == null)
+        {
+            throw new IllegalStateException("Program hasn't started yet, or has already ended");
         }
 
         final Canvas canvas = new Canvas(6);
@@ -76,5 +134,29 @@ public class Main
 //            Terminal.debugSleep(1000);
 //            Terminal.clear();
         }
+
+        endEvent();
+        this.scene = newScene;
+        initEvent();
+    }
+
+    public boolean programActive()
+    {
+        return this.scene != null;
+    }
+
+    /**
+     * Main function.
+     *
+     * @param args Command-line arguments (not used).
+     */
+    public static void main(final String[] args)
+    {
+        initializeInputHook();
+
+        final Main main = new Main();
+        final Scene game = new Game("Test content", main);
+
+        main.start(game);
     }
 }
