@@ -10,8 +10,8 @@ import com.github.kwhat.jnativehook.keyboard.NativeKeyEvent;
  */
 public class GameInputManager extends InputManager
 {
-    private boolean keyControlActive;
-    private final Game game;
+    private       boolean keyControlActive;
+    private final Game    game;
 
     public GameInputManager(final Main main,
                             final Game game)
@@ -57,7 +57,20 @@ public class GameInputManager extends InputManager
                 }
             }
             case NativeKeyEvent.VC_CONTROL -> this.keyControlActive = true;
-            case NativeKeyEvent.VC_ESCAPE -> this.main.end();
+
+            // Jay's Code Here For Options ESCAPE key
+            case NativeKeyEvent.VC_ESCAPE ->
+            {
+                // Switch to the Options scene
+                this.main.changeScene(new Options(this.main,
+                                                  this.game));
+            }
+        }
+
+        // Making sure canvas updates after key press
+        if (this.main.programActive())
+        {
+            this.main.update();
         }
     }
 

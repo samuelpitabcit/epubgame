@@ -152,20 +152,27 @@ public class Terminal
 
         try
         {
-            if (os.contains("windows"))
-            {
-                new ProcessBuilder("cmd", "/c", "cls")
-                    .inheritIO()
-                    .start()
-                    .waitFor();
-            }
-            else
-            {
-                System.out.print(ANSI_CLEAR_TERMINAL);
-                System.out.flush();
-            }
+//            if (os.contains("windows"))
+//            {
+//                new ProcessBuilder("cmd", "/c", "cls")
+//                    .inheritIO()
+//                    .start()
+//                    .waitFor();
+//            }
+//            else
+//            {
+//                new ProcessBuilder("clear")
+//                    .inheritIO()
+//                    .start()
+//                    .waitFor();
+//            }
+
+            // \033[H moves cursor to the top-left corner
+            // \033[2J clears the visible screen
+            System.out.print("\033[H\033[2J");
+            System.out.flush();
         }
-        catch (final IOException | InterruptedException e)
+        catch (Exception e)
         {
             System.err.println(
                 "Could not clear the console: " + e.getMessage());
@@ -202,7 +209,8 @@ public class Terminal
      *
      * @param canvas Source canvas object.
      */
-    public static void cycle(final Canvas canvas) {
+    public static void cycle(final Canvas canvas)
+    {
         clear();
         write(canvas);
     }
