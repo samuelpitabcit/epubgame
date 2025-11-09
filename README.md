@@ -12,7 +12,6 @@ The project uses the following libraries:
 
 - [Apache Tika](https://tika.apache.org/) for EPUB parsing
 - [JNativeHook](https://github.com/kwhat/jnativehook) for global keyboard input handling
-- [SLF4J](https://www.slf4j.org/) for logging (disabled in this project)
 
 ## Installation
 first clone the project:
