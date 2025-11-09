@@ -34,6 +34,6 @@ java -jar target/HttpHacks2025-1.0-SNAPSHOT.jar
 On the Terminal, Select what book you want to read, to stop typing, press ESCAPE
 
 ## Authors
-Samuel Pita
-Jaspreet Bath
-Rodrigo Sanchez
+- Samuel Pita
+- Jaspreet Bath
+- Rodrigo Sanchez
