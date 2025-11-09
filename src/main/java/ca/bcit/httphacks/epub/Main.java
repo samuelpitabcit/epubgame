@@ -37,23 +37,18 @@ public class Main
         {
             // Disable jnativehook logging
             final java.util.logging.Logger logger =
-                java.util.logging.Logger.getLogger(
-                    GlobalScreen.class
-                        .getPackage()
-                        .getName());
+                java.util.logging.Logger.getLogger(GlobalScreen.class.getPackage().getName());
             logger.setLevel(java.util.logging.Level.OFF);
             logger.setUseParentHandlers(false);
 
-            // Registers the native hook.
             GlobalScreen.registerNativeHook();
         }
         catch (final NativeHookException e)
         {
             System.err.println("Hook registration failed: " + e.getMessage());
             System.exit(PROGRAM_ERROR_EXIT_CODE);
-
-            throw new RuntimeException(e);
         }
+    }
 
     private void initEvent()
     {
@@ -205,29 +200,5 @@ public class Main
         {
             System.err.println("Error reading book: " + e.getMessage());
         }
-
-        endEvent();
-        this.scene = newScene;
-        initEvent();
-    }
-
-    public boolean programActive()
-    {
-        return this.scene != null;
-    }
-
-    /**
-     * Main function.
-     *
-     * @param args Command-line arguments (not used).
-     */
-    public static void main(final String[] args)
-    {
-        initializeInputHook();
-
-        final Main main = new Main();
-        final Scene game = new Game("Test content", main);
-
-        main.start(game);
     }
 }
