@@ -36,6 +36,7 @@ public class Options implements Scene
             "Resume",
             "Generate More",
             "Redo",
+            "Main Menu",
             "Quit"
                                    );
 
@@ -151,30 +152,43 @@ public class Options implements Scene
 
     public void executeSelectedOption()
     {
-        switch (menuItems.get(selectedIndex))
+        final String selected;
+        selected = menuItems.get(selectedIndex);
+
+        if (selected.equals("Generate More") ||
+            selected.equals("Redo"))
+        {
+            if (!(gameScene instanceof Game))
+            {
+                return;
+            }
+        }
+
+
+        switch (selected)
         {
             case "Resume" -> main.changeScene(gameScene);
 
             case "Generate More" ->
             {
-                System.out.println("WAIT FOR RODS FOR HIS PUSH");
+                ((Game) gameScene).generateNewContent();
                 main.changeScene(gameScene);
             }
             case "Redo" ->
             {
-                System.out.println("TODO redo logic");
+                ((Game) gameScene).reset();
                 main.changeScene(gameScene);
             }
+
+            case "Main Menu" -> main.openMainMenu();
+
             case "Quit" ->
             {
                 System.out.println("=== Bye ===");
                 Terminal.clear();
                 System.exit(0);
             }
-
-
         }
-
     }
 }
 

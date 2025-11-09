@@ -17,10 +17,10 @@ import java.util.List;
 public class Main
 {
     private static final int PROGRAM_ERROR_EXIT_CODE = 1;
-    private static final int CANVAS_CONTENT_LINES = 8;
+    private static final int CANVAS_CONTENT_LINES    = 8;
 
     private final Canvas mainCanvas;
-    private Scene scene;
+    private       Scene  scene;
 
     public Main()
     {
@@ -118,6 +118,33 @@ public class Main
         return this.scene != null;
     }
 
+
+    // ---------- Jay's Code ---------- //
+
+    /*
+     * Method to stop the Native listener so we can
+     * use Scanner in Menu.
+     */
+    public void openMainMenu()
+    {
+        if (this.scene != null)
+        {
+            this.end();
+        }
+
+        try
+        {
+            // Stop JNativeHook so Scanner works
+            GlobalScreen.unregisterNativeHook();
+        }
+        catch (NativeHookException e)
+        {
+            e.printStackTrace();
+        }
+        main(new String[0]);
+    }
+
+
     /**
      * Program entry point.
      */
@@ -149,8 +176,25 @@ public class Main
             initializeInputHook();
 
             Main main = new Main();
-            Scene game = new Game(textContent, main);
+            Scene game = new Game(words, main);
             main.start(game);
+
+
+            // keeps the timer count without needing user
+            // key press.
+            while (main.programActive())
+            {
+                main.update();
+                try
+                {
+                    // Sleep for 100ms (updates 10 times per second)
+                    Thread.sleep(100);
+                }
+                catch (InterruptedException e)
+                {
+                    e.printStackTrace();
+                }
+            }
         }
         catch (IOException e)
         {
