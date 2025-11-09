@@ -1,5 +1,7 @@
 package ca.bcit.httphacks.epub;
 
+import com.github.kwhat.jnativehook.keyboard.NativeKeyListener;
+
 /**
  * Game class.
  *
@@ -8,15 +10,23 @@ package ca.bcit.httphacks.epub;
  * @author Jaspreet Bath
  * @version 1.0
  */
-public class Game
+public class Game implements Scene
 {
     private final String textContent;
     private final StringBuilder input;
+    private final GameInputManager gameInputManager;
 
-    public Game(final String textContent)
+    /**
+     * Game constructor.
+     *
+     * @param textContent The content for the player to type on.
+     */
+    public Game(final String textContent,
+                final Main main)
     {
-        this.textContent = textContent;
-        this.input       = new StringBuilder();
+        this.textContent      = textContent;
+        this.input            = new StringBuilder();
+        this.gameInputManager = new GameInputManager(main, this);
     }
 
     /**
@@ -64,9 +74,24 @@ public class Game
         this.input.append(c);
     }
 
-    public void writeToCanvasDebug(final Canvas canvas) {
-        canvas.reset();
-        canvas.writeLine(this.input.toString());
-        canvas.writeLine("this.input length = " + this.input.length());
+    @Override
+    public void initCanvas(final Canvas mainCanvas) {
+        mainCanvas.reset();
+        mainCanvas.writeLine("Begin typing!");
+        mainCanvas.writeLine("length = " + this.input.length());
+    }
+
+    @Override
+    public void updateCanvas(final Canvas mainCanvas)
+    {
+        mainCanvas.reset();
+        mainCanvas.writeLine(this.input.toString());
+        mainCanvas.writeLine("length = " + this.input.length());
+    }
+
+    @Override
+    public NativeKeyListener getInputManager()
+    {
+        return this.gameInputManager;
     }
 }
