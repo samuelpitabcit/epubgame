@@ -3,13 +3,16 @@ package ca.bcit.httphacks.epub;
 import com.github.kwhat.jnativehook.GlobalScreen;
 import com.github.kwhat.jnativehook.NativeHookException;
 
+import java.io.IOException;
+import java.util.List;
+
 /**
  * Main class.
  *
  * @author Samuel Pita
  * @author Rodrigo Sanchez
  * @author Jaspreet Bath
- * @version 1.0
+ * @version 1.1
  */
 public class Main
 {
@@ -25,49 +28,42 @@ public class Main
         this.scene      = null;
     }
 
+    /**
+     * Initialize JNativeHook keyboard listener.
+     */
     private static void initializeInputHook()
     {
         try
         {
-            // Disables logging for the GlobalScreen class.
+            // Disable jnativehook logging
             final java.util.logging.Logger logger =
-                java.util.logging.Logger.getLogger(
-                    GlobalScreen.class
-                        .getPackage()
-                        .getName());
+                java.util.logging.Logger.getLogger(GlobalScreen.class.getPackage().getName());
             logger.setLevel(java.util.logging.Level.OFF);
             logger.setUseParentHandlers(false);
 
-            // Registers the native hook.
             GlobalScreen.registerNativeHook();
         }
         catch (final NativeHookException e)
         {
             System.err.println("Hook registration failed: " + e.getMessage());
             System.exit(PROGRAM_ERROR_EXIT_CODE);
-
-            throw new RuntimeException(e);
         }
     }
 
     private void initEvent()
     {
-        // Logic Setup
         GlobalScreen.addNativeKeyListener(this.scene.getInputManager());
         this.scene.initLogic();
 
-        // Canvas Setup
         this.scene.initCanvas(this.mainCanvas);
         Terminal.cycle(this.mainCanvas);
     }
 
     private void endEvent()
     {
-        // Logic Conclusion
         this.scene.endLogic();
         GlobalScreen.removeNativeKeyListener(this.scene.getInputManager());
 
-        // Canvas Conclusion
         this.scene.endCanvas(this.mainCanvas);
         Terminal.cycle(this.mainCanvas);
     }
@@ -76,7 +72,7 @@ public class Main
     {
         if (this.scene != null)
         {
-            throw new IllegalStateException("Program has started already");
+            throw new IllegalStateException("Program has already started");
         }
 
         this.scene = scene;
@@ -99,7 +95,7 @@ public class Main
     {
         if (this.scene == null)
         {
-            throw new IllegalStateException("Program hasn't started yet, or has already ended");
+            throw new IllegalStateException("Program hasn't started yet or already ended");
         }
 
         endEvent();
@@ -123,17 +119,42 @@ public class Main
     }
 
     /**
-     * Main function.
-     *
-     * @param args Command-line arguments (not used).
+     * Program entry point.
      */
     public static void main(final String[] args)
     {
-        initializeInputHook();
+        try
+        {
+            // Run menu BEFORE initializing GlobalScreen
+            Menu menu = new Menu();
+            String epubPath = menu.show();
+            if (epubPath == null)
+            {
+                System.out.println("Exiting program.");
+                return;
+            }
 
-        final Main main = new Main();
-        final Scene game = new Game("Test content", main);
+            System.out.println("Loading book...");
+            List<String> words = BookReader.loadWords(epubPath);
+            if (words.isEmpty())
+            {
+                System.out.println("Book is empty or unreadable.");
+                return;
+            }
 
-        main.start(game);
+            // Convert words to single string (limit optional)
+            String textContent = String.join(" ", BookReader.getSlice(words, 0, 200));
+
+            // Now safely start the key listener
+            initializeInputHook();
+
+            Main main = new Main();
+            Scene game = new Game(textContent, main);
+            main.start(game);
+        }
+        catch (IOException e)
+        {
+            System.err.println("Error reading book: " + e.getMessage());
+        }
     }
 }
