@@ -10,9 +10,9 @@ import com.github.kwhat.jnativehook.keyboard.NativeKeyListener;
  */
 public interface Scene
 {
-    void initLogic();
-    void updateLogic();
-    void endLogic();
+    default void initLogic() {}
+    default void updateLogic() {}
+    default void endLogic() {}
 
     default void initCanvas(final Canvas mainCanvas) {}
     default void updateCanvas(final Canvas mainCanvas) {}

@@ -33,6 +33,11 @@ public class GameInputManager extends InputManager
         {
             this.game.inputAdd(e.getKeyChar());
         }
+
+        if (this.main.programActive())
+        {
+            this.main.update();
+        }
     }
 
     @Override
@@ -52,9 +57,8 @@ public class GameInputManager extends InputManager
                 }
             }
             case NativeKeyEvent.VC_CONTROL -> this.keyControlActive = true;
+            case NativeKeyEvent.VC_ESCAPE -> this.main.end();
         }
-
-        this.main.update();
     }
 
     @Override

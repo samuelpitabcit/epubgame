@@ -25,73 +25,6 @@ public class Main
         this.scene      = null;
     }
 
-    private void initEvent()
-    {
-        // Logic Setup
-        GlobalScreen.addNativeKeyListener(this.scene.getInputManager());
-        this.scene.initLogic();
-
-        // Canvas Setup
-        this.scene.initCanvas(this.mainCanvas);
-        Terminal.cycle(this.mainCanvas);
-    }
-
-    private void endEvent()
-    {
-        // Logic Conclusion
-        this.scene.endLogic();
-        GlobalScreen.removeNativeKeyListener(this.scene.getInputManager());
-
-        // Canvas Conclusion
-        this.scene.endCanvas(this.mainCanvas);
-        Terminal.cycle(this.mainCanvas);
-    }
-
-    void start(final Scene scene)
-    {
-        if (this.scene != null)
-        {
-            throw new IllegalStateException("Program has started already");
-        }
-
-        this.scene = scene;
-        initEvent();
-    }
-
-    void update()
-    {
-        if (this.scene == null)
-        {
-            throw new IllegalStateException("Program hasn't started yet");
-        }
-
-        this.scene.updateLogic();
-        this.scene.updateCanvas(this.mainCanvas);
-        Terminal.cycle(this.mainCanvas);
-    }
-
-    void end()
-    {
-        if (this.scene == null)
-        {
-            throw new IllegalStateException("Program hasn't started yet, or has already ended");
-        }
-
-        endEvent();
-    }
-
-    void changeScene(final Scene newScene)
-    {
-        if (this.scene == null)
-        {
-            throw new IllegalStateException("Program hasn't started yet");
-        }
-
-        endEvent();
-        this.scene = newScene;
-        initEvent();
-    }
-
     private static void initializeInputHook()
     {
         try
@@ -115,6 +48,78 @@ public class Main
 
             throw new RuntimeException(e);
         }
+    }
+
+    private void initEvent()
+    {
+        // Logic Setup
+        GlobalScreen.addNativeKeyListener(this.scene.getInputManager());
+        this.scene.initLogic();
+
+        // Canvas Setup
+        this.scene.initCanvas(this.mainCanvas);
+        Terminal.cycle(this.mainCanvas);
+    }
+
+    private void endEvent()
+    {
+        // Logic Conclusion
+        this.scene.endLogic();
+        GlobalScreen.removeNativeKeyListener(this.scene.getInputManager());
+
+        // Canvas Conclusion
+        this.scene.endCanvas(this.mainCanvas);
+        Terminal.cycle(this.mainCanvas);
+    }
+
+    public void start(final Scene scene)
+    {
+        if (this.scene != null)
+        {
+            throw new IllegalStateException("Program has started already");
+        }
+
+        this.scene = scene;
+        initEvent();
+    }
+
+    public void update()
+    {
+        if (this.scene == null)
+        {
+            throw new IllegalStateException("Program hasn't started yet");
+        }
+
+        this.scene.updateLogic();
+        this.scene.updateCanvas(this.mainCanvas);
+        Terminal.cycle(this.mainCanvas);
+    }
+
+    public void end()
+    {
+        if (this.scene == null)
+        {
+            throw new IllegalStateException("Program hasn't started yet, or has already ended");
+        }
+
+        endEvent();
+    }
+
+    public void changeScene(final Scene newScene)
+    {
+        if (this.scene == null)
+        {
+            throw new IllegalStateException("Program hasn't started yet");
+        }
+
+        endEvent();
+        this.scene = newScene;
+        initEvent();
+    }
+
+    public boolean programActive()
+    {
+        return this.scene != null;
     }
 
     /**

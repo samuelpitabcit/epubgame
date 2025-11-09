@@ -75,24 +75,6 @@ public class Game implements Scene
     }
 
     @Override
-    public void initLogic()
-    {
-        //
-    }
-
-    @Override
-    public void updateLogic()
-    {
-        //
-    }
-
-    @Override
-    public void endLogic()
-    {
-        //
-    }
-
-    @Override
     public void initCanvas(final Canvas mainCanvas) {
         mainCanvas.reset();
         mainCanvas.writeLine("Begin typing!");
