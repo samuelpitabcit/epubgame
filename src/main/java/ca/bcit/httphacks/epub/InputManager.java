@@ -4,66 +4,31 @@ import com.github.kwhat.jnativehook.keyboard.NativeKeyEvent;
 import com.github.kwhat.jnativehook.keyboard.NativeKeyListener;
 
 /**
- * Manages global key inputs, and applies them to methods that exist in the referring
- * game object, which has all the logic.
+ * Abstract input manager class.
  *
  * @author Samuel Pita
- * @author Rodrigo Sanchez
- * @author Jaspreet Bath
  * @version 1.0
  */
-public class InputManager implements NativeKeyListener
+public abstract class InputManager implements NativeKeyListener
 {
-    private boolean keyControlActive;
+    protected final Main main;
 
-    private final Game game;
-
-    public InputManager(final Game game)
+    public InputManager(final Main main)
     {
-        if (game == null)
+        if (main == null)
         {
-            throw new IllegalArgumentException("Game object cannot be null");
+            throw new IllegalArgumentException("Main parameter cannot be null");
         }
 
-        this.game             = game;
-        this.keyControlActive = false;
+        this.main = main;
     }
 
     @Override
-    public void nativeKeyTyped(final NativeKeyEvent e)
-    {
-        if (!Character.isISOControl(e.getKeyChar()))
-        {
-            this.game.inputAdd(e.getKeyChar());
-        }
-    }
+    public abstract void nativeKeyTyped(final NativeKeyEvent e);
 
     @Override
-    public void nativeKeyPressed(final NativeKeyEvent e)
-    {
-        switch (e.getKeyCode())
-        {
-            case NativeKeyEvent.VC_BACKSPACE ->
-            {
-                if (this.keyControlActive)
-                {
-                    this.game.inputDeleteLastWord();
-                }
-                else
-                {
-                    this.game.inputDeleteLastChar();
-                }
-            }
-            case NativeKeyEvent.VC_CONTROL -> this.keyControlActive = true;
-        }
-    }
+    public abstract void nativeKeyPressed(final NativeKeyEvent e);
 
     @Override
-    public void nativeKeyReleased(final NativeKeyEvent e)
-    {
-        if (e.getKeyCode() == NativeKeyEvent.VC_CONTROL)
-        {
-            this.keyControlActive = false;
-        }
-    }
+    public abstract void nativeKeyReleased(final NativeKeyEvent e);
 }
